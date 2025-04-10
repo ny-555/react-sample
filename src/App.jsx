@@ -1,69 +1,27 @@
-import { useState } from "react";
 import "./App.css";
-import { InputTodos } from "./components/InputTodos";
-import { IncompleteTodos } from "./components/IncompleteTodos";
-import { CompleteTodos } from "./components/CompleteTodos";
+import { Routes, Route, Link } from "react-router-dom";
+import { Home } from "./components/Home";
+import { Page1 } from "./components/Page1";
+import { Page2 } from "./components/Page2";
+import { Page1DetailsA } from "./components/Page1DetailsA";
+import { Page1DetailsB } from "./components/Page1DetailsB";
 
-function App() {
-  const [todoText, setTodoText] = useState("");
-  const [incompleteTodos, setIncompleteTodos] = useState([]);
-
-  const [completeTodos, setCompleteTodos] = useState([]);
-
-  const onChangeTodoText = (event) => setTodoText(event.target.value);
-
-  const onClickAdd = () => {
-    if (todoText === "") return;
-    const newTodos = [...incompleteTodos, todoText];
-    setIncompleteTodos(newTodos);
-    setTodoText("");
-  };
-
-  const onClickComplete = (index) => {
-    const newIncompleteTodos = [...incompleteTodos];
-    newIncompleteTodos.splice(index, 1);
-    const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
-    setIncompleteTodos(newIncompleteTodos);
-    setCompleteTodos(newCompleteTodos);
-  };
-
-  const onClickDelete = (index) => {
-    const newTodos = [...incompleteTodos];
-    newTodos.splice(index, 1);
-    setIncompleteTodos(newTodos);
-  };
-
-  const onClickBack = (index) => {
-    const newCompleteTodos = [...completeTodos];
-    newCompleteTodos.splice(index, 1);
-    const newIncompleteTodos = [...incompleteTodos, completeTodos[index]];
-    setCompleteTodos(newCompleteTodos);
-    setIncompleteTodos(newIncompleteTodos);
-  };
-
-  const isMaxLimitIncompleteTodos = incompleteTodos.length >= 5;
-
+export default function App() {
   return (
-    <>
-      <InputTodos
-        todoText={todoText}
-        onChange={onChangeTodoText}
-        onClick={onClickAdd}
-        disabled={isMaxLimitIncompleteTodos}
-      />
-
-      {isMaxLimitIncompleteTodos && (
-        <p style={{ color: "red" }}>登録できるTODOは5個までです</p>
-      )}
-
-      <IncompleteTodos
-        todos={incompleteTodos}
-        onClickComplete={onClickComplete}
-        onClickDelete={onClickDelete}
-      />
-      <CompleteTodos todos={completeTodos} onClick={onClickBack} />
-    </>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/page1" element={<Page1 />}>
+          <Route path="/detailsA" element={<Page1DetailsA />} />
+          <Route path="/detailsB" element={<Page1DetailsB />} />
+        </Route>
+        <Route path="/page2" element={<Page2 />} />
+      </Routes>
+      <Link to="/">HOME</Link>
+      <br />
+      <Link to="/page1">PAGE1</Link>
+      <br />
+      <Link to="/page2">PAGE2</Link>
+    </div>
   );
 }
-
-export default App;
